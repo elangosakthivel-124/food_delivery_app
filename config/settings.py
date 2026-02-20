@@ -6,11 +6,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+
     'accounts',
     'restaurants',
     'orders',
 ]
-AUTH_USER_MODEL = 'accounts.User'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = 'media/'
-
