@@ -1,15 +1,12 @@
-from django.urls import path
-from .views import (
-    RestaurantListAPIView,
-    RestaurantDetailAPIView,
-    FoodItemListAPIView,
-    FoodItemDetailAPIView,
-)
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('restaurants/', RestaurantListAPIView.as_view()),
-    path('restaurants/<int:pk>/', RestaurantDetailAPIView.as_view()),
-
-    path('foods/', FoodItemListAPIView.as_view()),
-    path('foods/<int:pk>/', FoodItemDetailAPIView.as_view()),
+    path('admin/', admin.site.urls),
+    path('api/', include('restaurants.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
