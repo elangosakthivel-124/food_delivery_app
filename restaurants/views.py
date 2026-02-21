@@ -21,3 +21,20 @@ class FoodItemListAPIView(generics.ListCreateAPIView):
 class FoodItemDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = FoodItem.objects.all()
     serializer_class = FoodItemSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
+
+
+class RestaurantListAPIView(generics.ListCreateAPIView):
+    queryset = Restaurant.objects.all()
+    serializer_class = RestaurantSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+
+        user = self.request.user
+
+        if user.user_type != 'restaurant':
+            raise PermissionDenied("Only restaurant owners can create restaurants")
+
+        serializer.save(owner=user)
