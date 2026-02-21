@@ -17,3 +17,28 @@ class RegisterSerializer(serializers.ModelSerializer):
             user_type=validated_data['user_type']
         )
         return user
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+
+
+class LoginSerializer(serializers.Serializer):
+
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+
+        user = authenticate(
+            username=data['username'],
+            password=data['password']
+        )
+
+        if not user:
+            raise serializers.ValidationError("Invalid credentials")
+
+        token, created = Token.objects.get_or_create(user=user)
+
+        return {
+            'user': user,
+            'token': token.key
+        }
