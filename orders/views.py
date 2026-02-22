@@ -68,3 +68,21 @@ class AddToCartAPIView(APIView):
             "message": "Order placed successfully",
             "order_id": order.id
         })
+class UserOrdersAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        orders = Order.objects.filter(user=request.user)
+
+        data = []
+
+        for order in orders:
+            data.append({
+                "order_id": order.id,
+                "total": order.total_price,
+                "status": order.status
+            })
+
+        return Response(data)
