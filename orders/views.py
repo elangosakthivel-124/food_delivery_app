@@ -32,3 +32,39 @@ class AddToCartAPIView(APIView):
         cart_item.save()
 
         return Response({"message": "Item added to cart"})
+        class PlaceOrderAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        cart = Cart.objects.get(user=request.user)
+        items = cart.items.all()
+
+        total_price = 0
+
+        order = Order.objects.create(
+            user=request.user,
+            total_price=0
+        )
+
+        for item in items:
+            price = item.food_item.price * item.quantity
+            total_price += price
+
+            OrderItem.objects.create(
+                order=order,
+                food_item=item.food_item,
+                quantity=item.quantity,
+                price=price
+            )
+
+        order.total_price = total_price
+        order.save()
+
+        items.delete()
+
+        return Response({
+            "message": "Order placed successfully",
+            "order_id": order.id
+        })
