@@ -126,3 +126,5 @@ class UserOrdersAPIView(APIView):
             "order_id": order.id,
             "payment_method": payment_method
         })
+from restaurants.models import Restaurant
+from rest_framework.exceptions import PermissionDenied
