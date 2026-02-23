@@ -128,3 +128,30 @@ class UserOrdersAPIView(APIView):
         })
 from restaurants.models import Restaurant
 from rest_framework.exceptions import PermissionDenied
+
+class RestaurantOrdersAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        if request.user.user_type != 'restaurant':
+            raise PermissionDenied("Only restaurant owners allowed")
+
+        restaurant = Restaurant.objects.filter(owner=request.user).first()
+
+        orders = OrderItem.objects.filter(
+            food_item__restaurant=restaurant
+        )
+
+        data = []
+
+        for item in orders:
+            data.append({
+                "order_id": item.order.id,
+                "food": item.food_item.name,
+                "quantity": item.quantity,
+                "status": item.order.status
+            })
+
+        return Response(data)
