@@ -10,3 +10,21 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+from django.urls import path
+from .views import (
+    RestaurantListAPIView,
+    RestaurantDetailAPIView,
+    FoodItemListAPIView,
+    FoodItemDetailAPIView,
+    CategoryListAPIView
+)
+
+urlpatterns = [
+    path('restaurants/', RestaurantListAPIView.as_view()),
+    path('restaurants/<int:pk>/', RestaurantDetailAPIView.as_view()),
+
+    path('foods/', FoodItemListAPIView.as_view()),
+    path('foods/<int:pk>/', FoodItemDetailAPIView.as_view()),
+
+    path('categories/', CategoryListAPIView.as_view()),
+]
