@@ -38,3 +38,20 @@ class RestaurantListAPIView(generics.ListCreateAPIView):
             raise PermissionDenied("Only restaurant owners can create restaurants")
 
         serializer.save(owner=user)
+
+from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Restaurant, FoodItem
+from .serializers import RestaurantSerializer, FoodItemSerializer
+
+
+class RestaurantListAPIView(generics.ListCreateAPIView):
+    queryset = Restaurant.objects.all().select_related('owner')
+    serializer_class = RestaurantSerializer
+
+    filter_backends = [
+        filters.SearchFilter,
+        DjangoFilterBackend
+    ]
+
+    search_fields = ['name', 'address']
