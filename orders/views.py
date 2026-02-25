@@ -157,3 +157,23 @@ class RestaurantOrdersAPIView(APIView):
         return Response(data)
 from django.db.models import Sum
 from restaurants.models import FoodItem
+
+class PopularFoodsAPIView(APIView):
+
+    def get(self, request):
+
+        foods = FoodItem.objects.annotate(
+            total_orders=Sum('orderitem__quantity')
+        ).order_by('-total_orders')[:10]
+
+        data = []
+
+        for food in foods:
+            data.append({
+                "id": food.id,
+                "name": food.name,
+                "restaurant": food.restaurant.name,
+                "orders": food.total_orders or 0
+            })
+
+        return Response(data)
