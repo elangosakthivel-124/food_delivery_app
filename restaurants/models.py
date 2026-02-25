@@ -64,3 +64,29 @@ class FoodItem(models.Model):
     def __str__(self):
         return self.name
 
+from django.conf import settings
+
+User = settings.AUTH_USER_MODEL
+
+
+class Review(models.Model):
+
+    restaurant = models.ForeignKey(
+        Restaurant,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    rating = models.IntegerField()
+    comment = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['restaurant', 'user']
+
+    def __str__(self):
+        return f"{self.restaurant.name} - {self.rating}"
+
