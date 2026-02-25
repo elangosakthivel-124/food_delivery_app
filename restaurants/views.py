@@ -55,3 +55,6 @@ class RestaurantListAPIView(generics.ListCreateAPIView):
     ]
 
     search_fields = ['name', 'address']
+from rest_framework.permissions import IsAuthenticated
+from .models import Review
+from .serializers import ReviewSerializer
