@@ -28,3 +28,25 @@ urlpatterns = [
 
     path('categories/', CategoryListAPIView.as_view()),
 ]
+from .views import (
+    RestaurantListAPIView,
+    RestaurantDetailAPIView,
+    FoodItemListAPIView,
+    FoodItemDetailAPIView,
+    CategoryListAPIView,
+    CreateReviewAPIView,
+    TopRestaurantsAPIView
+)
+
+urlpatterns = [
+    path('restaurants/', RestaurantListAPIView.as_view()),
+    path('restaurants/<int:pk>/', RestaurantDetailAPIView.as_view()),
+
+    path('foods/', FoodItemListAPIView.as_view()),
+    path('foods/<int:pk>/', FoodItemDetailAPIView.as_view()),
+
+    path('categories/', CategoryListAPIView.as_view()),
+
+    path('review/', CreateReviewAPIView.as_view()),
+    path('top-restaurants/', TopRestaurantsAPIView.as_view()),
+]
