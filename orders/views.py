@@ -155,3 +155,5 @@ class RestaurantOrdersAPIView(APIView):
             })
 
         return Response(data)
+from django.db.models import Sum
+from restaurants.models import FoodItem
