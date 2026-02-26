@@ -175,7 +175,164 @@ class PopularFoodsAPIView(APIView):
                 "restaurant": food.restaurant.name,
                 "orders": food.total_orders or 0
             })
+            class PlaceOrderAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        payment_method = request.data.get('payment_method', 'cod')
+        address_id = request.data.get('address_id')
+
+        address = Address.objects.get(id=address_id, user=request.user)
+
+        cart = Cart.objects.get(user=request.user)
+        items = cart.items.all()
+
+        total_price = 0
+
+        order = Order.objects.create(
+            user=request.user,
+            total_price=0,
+            payment_method=payment_method,
+            address=address
+        )
+
+        for item in items:
+            price = item.food_item.price * item.quantity
+            total_price += price
+
+            OrderItem.objects.create(
+                order=order,
+                food_item=item.food_item,
+                quantity=item.quantity,
+                price=price
+            )
+
+        order.total_price = total_price
+        order.save()
+
+        items.delete()
+
+        return Response({
+            "message": "Order placed successfully",
+            "order_id": order.id
+        })class PlaceOrderAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        payment_method = request.data.get('payment_method', 'cod')
+        address_id = request.data.get('address_id')
+
+        address = Address.objects.get(id=address_id, user=request.user)
+
+        cart = Cart.objects.get(user=request.user)
+        items = cart.items.all()
+
+        total_price = 0
+
+        order = Order.objects.create(
+            user=request.user,
+            total_price=0,
+            payment_method=payment_method,
+            address=address
+        )
+
+        for item in items:
+            price = item.food_item.price * item.quantity
+            total_price += price
+
+            OrderItem.objects.create(
+                order=order,
+                food_item=item.food_item,
+                quantity=item.quantity,
+                price=price
+            )
+
+        order.total_price = total_price
+        order.save()
+
+        items.delete()
+
+        return Response({
+            "message": "Order placed successfully",
+            "order_id": order.id
+        })
 
         return Response(data)
 
 from accounts.models import Address
+class PlaceOrderAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        payment_method = request.data.get('payment_method', 'cod')
+        address_id = request.data.get('address_id')
+
+        address = Address.objects.get(id=address_id, user=request.user)
+
+        cart = Cart.objects.get(user=request.user)
+        items = cart.items.all()
+
+        total_price = 0
+
+        order = Order.objects.create(
+            user=request.user,
+            total_price=0,
+            payment_method=payment_method,
+            address=address
+        )
+
+        for item in items:
+            price = item.food_item.price * item.quantity
+            total_price += price
+
+            OrderItem.objects.create(
+                order=order,
+                food_item=item.food_item,
+                quantity=item.quantity,
+                price=price
+            )
+
+        order.total_price = total_price
+        order.save()
+
+        items.delete()
+
+        return Response({
+            "message": "Order placed successfully",
+            "order_id": order.id
+        })
+        class OrderDetailAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, order_id):
+
+        order = Order.objects.get(id=order_id, user=request.user)
+
+        items = order.items.all()
+
+        order_items = []
+
+        for item in items:
+            order_items.append({
+                "food": item.food_item.name,
+                "quantity": item.quantity,
+                "price": item.price
+            })
+
+        data = {
+            "order_id": order.id,
+            "status": order.status,
+            "total_price": order.total_price,
+            "payment_method": order.payment_method,
+            "address": order.address.address_line,
+            "items": order_items
+        }
+
+        return Response(data)
