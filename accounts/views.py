@@ -32,3 +32,25 @@ class LoginAPIView(APIView):
             return Response(serializer.validated_data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from .models import Address
+from .serializers import AddressSerializer, UserProfileSerializer
+class CreateAddressAPIView(generics.CreateAPIView):
+    serializer_class = AddressSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+class UserAddressListAPIView(generics.ListAPIView):
+    serializer_class = AddressSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)
+        class UserProfileAPIView(generics.RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
