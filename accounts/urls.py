@@ -24,3 +24,5 @@ urlpatterns = [
     path('address/add/', CreateAddressAPIView.as_view()),
     path('addresses/', UserAddressListAPIView.as_view()),
 ]
+from .views import OrderDetailAPIView
+path('order/<int:order_id>/', OrderDetailAPIView.as_view()),
