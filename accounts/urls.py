@@ -8,3 +8,19 @@ urlpatterns = [
     path('api/', include('restaurants.urls')),
     path('api/auth/', include('accounts.urls')),
 ]
+from .views import (
+    RegisterAPIView,
+    LoginAPIView,
+    CreateAddressAPIView,
+    UserAddressListAPIView,
+    UserProfileAPIView
+)
+
+urlpatterns = [
+    path('register/', RegisterAPIView.as_view()),
+    path('login/', LoginAPIView.as_view()),
+
+    path('profile/', UserProfileAPIView.as_view()),
+    path('address/add/', CreateAddressAPIView.as_view()),
+    path('addresses/', UserAddressListAPIView.as_view()),
+]
