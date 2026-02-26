@@ -52,3 +52,17 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         fields = '__all__'
         read_only_fields = ['user']
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    addresses = AddressSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'user_type', 'addresses']class UserProfileSerializer(serializers.ModelSerializer):
+
+    addresses = AddressSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'user_type', 'addresses']
