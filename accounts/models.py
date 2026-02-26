@@ -34,3 +34,10 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.full_name} - {self.city}"
+        from accounts.models import Address
+        address = models.ForeignKey(
+    Address,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True
+)
