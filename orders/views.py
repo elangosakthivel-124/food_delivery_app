@@ -177,3 +177,5 @@ class PopularFoodsAPIView(APIView):
             })
 
         return Response(data)
+
+from accounts.models import Address
