@@ -1,56 +1,17 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-
-from .serializers import RegisterSerializer, LoginSerializer
+from rest_framework import generics, permissions
+from django.contrib.auth.models import User
+from .serializers import RegisterSerializer, UserSerializer
 
 
-class RegisterAPIView(APIView):
-
-    permission_classes = []
-
-    def post(self, request):
-
-        serializer = RegisterSerializer(data=request.data)
-
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response(serializer.data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
+    permission_classes = [permissions.AllowAny]
 
 
-class LoginAPIView(APIView):
-
-    permission_classes = []
-
-    def post(self, request):
-
-        serializer = LoginSerializer(data=request.data)
-
-        if serializer.is_valid():
-            return Response(serializer.validated_data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
-from .models import Address
-from .serializers import AddressSerializer, UserProfileSerializer
-class CreateAddressAPIView(generics.CreateAPIView):
-    serializer_class = AddressSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-class UserAddressListAPIView(generics.ListAPIView):
-    serializer_class = AddressSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Address.objects.filter(user=self.request.user)
-        class UserProfileAPIView(generics.RetrieveAPIView):
-    serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]
+class ProfileView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user
